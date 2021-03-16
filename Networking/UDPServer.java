@@ -18,7 +18,7 @@ public class UDPServer
     {
         try 
         {
-            socket = new DatagramSocket(9876);
+            socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
 
             while (true) 
