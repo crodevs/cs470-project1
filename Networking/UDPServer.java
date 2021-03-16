@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class UDPServer 
 {
@@ -22,6 +23,14 @@ public class UDPServer
         {
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
+            InetAddress defaultIP = InetAddress.getByName("127.0.0.1");
+            int defaultPort = 80;
+
+            // declare a ClientInfo object with default values
+            ClientInfo client = new ClientInfo(defaultIP, defaultPort);
+
+            // initialize array of clients
+            ArrayList<ClientInfo> clients = new ArrayList<ClientInfo>();
 
             while (true) 
             {
@@ -31,6 +40,11 @@ public class UDPServer
                 String message = new String(incomingPacket.getData());
                 InetAddress IPAddress = incomingPacket.getAddress();
                 int port = incomingPacket.getPort();
+
+                // set client information, add client to client list
+                client.setIP(IPAddress);
+                client.setPort(port);
+                clients.add(client);
 
                 // output for server user
                 System.out.println("Received message from client: " + message);
