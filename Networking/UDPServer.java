@@ -7,6 +7,12 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+/**
+ * Server side implementation that listens for packets
+ * @author Carson Rohan, Lucas Steffens
+ * @version 3-16-2021
+ */
+
 public class UDPServer 
 {
     DatagramSocket socket = null;
@@ -23,11 +29,6 @@ public class UDPServer
         {
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
-            InetAddress defaultIP = InetAddress.getByName("127.0.0.1");
-            int defaultPort = 80;
-
-            // declare a ClientInfo object with default values
-            ClientInfo client = new ClientInfo(defaultIP, defaultPort);
 
             // initialize array of clients
             ArrayList<ClientInfo> clients = new ArrayList<ClientInfo>();
@@ -42,9 +43,10 @@ public class UDPServer
                 int port = incomingPacket.getPort();
 
                 // set client information, add client to client list
-                client.setIP(IPAddress);
-                client.setPort(port);
+                ClientInfo client = new ClientInfo(IPAddress, port);
                 clients.add(client);
+
+                // check if any clients are dead
 
                 // output for server user
                 System.out.println("Received message from client: " + message);

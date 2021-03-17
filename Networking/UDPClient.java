@@ -3,14 +3,17 @@ package Networking;
 import java.io.IOException;
 import java.net.*;
 
+/**
+ * Client side implementation that sends packets
+ * @author Carson Rohan, Lucas Steffens
+ * @version 3-16-2021
+ */
+
 public class UDPClient 
 {
     DatagramSocket Socket;
 
-    public UDPClient() 
-    {
-
-    }
+    public UDPClient() { }
 
     public void createAndListenSocket() 
     {
@@ -22,22 +25,29 @@ public class UDPClient
             String sentence = "Viehmann";
             byte[] data = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, 25565);
+
             Socket.send(sendPacket);
             System.out.println("Message sent from client");
+
             DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
             Socket.receive(incomingPacket);
+
             String response = new String(incomingPacket.getData());
             System.out.println("Response from server:" + response);
+
             Socket.close();
         }
+
         catch (UnknownHostException e) 
         {
             e.printStackTrace();
-        } 
+        }
+
         catch (SocketException e) 
         {
             e.printStackTrace();
-        } 
+        }
+
         catch (IOException e) 
         {
             e.printStackTrace();
