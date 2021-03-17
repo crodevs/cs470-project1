@@ -47,4 +47,13 @@ public class ClientInfo
         return currentTime.getTime() - lastSeen.getTime() > TTL;
     }
 
+    /**
+     * String representation of a client
+     * @return string representation of a client
+     */
+    public String toString()
+    {
+        return "Client IP: " + this.IP + "\n" + "Client port: " + this.port + "\n";
+    }
+
 }

@@ -35,6 +35,8 @@ public class UDPServer
 
             while (true) 
             {
+                System.out.println("Waiting for packets...\n");
+
                 // set packet length, receive packet, get data from packet and IP/port
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
                 socket.receive(incomingPacket);
@@ -44,17 +46,33 @@ public class UDPServer
 
                 // set client information, add client to client list
                 ClientInfo client = new ClientInfo(IPAddress, port);
+
+                /**
+                 * TODO fix adding client that already exists into clients list
+                 */
                 clients.add(client);
 
-                // check if any clients are dead
-
                 // output for server user
-                System.out.println("Received message from client: " + message);
-                System.out.println("Client IP:"+IPAddress.getHostAddress());
-                System.out.println("Client port:"+port);
+                System.out.println("Received message from client: \n" + message);
+                System.out.println("Client IP: "+IPAddress.getHostAddress());
+                System.out.println("Client port: "+port);
+
+                String deadClient = "Dead clients: \n";
+                String liveClient = "Live clients: \n";
+
+                // check for dead and alive clients
+                for(int i = 0; i < clients.size(); i++)
+                {
+                    if(clients.get(i).isDead())
+                    {
+                        deadClient += clients.get(i).toString();
+                    } else {
+                        liveClient += clients.get(i).toString();
+                    }
+                }
 
                 // acknowledgment
-                String reply = "Thank you for the message";
+                String reply = "Thank you for the message\n\n" + liveClient + deadClient;
                 byte[] data = reply.getBytes();
 
                 // create packet for acknowledgement
@@ -63,7 +81,7 @@ public class UDPServer
                 // send acknowledgement, close socket
                 socket.send(replyPacket);
                 Thread.sleep(2000);
-                socket.close();
+                //socket.close();
             }
         }
 

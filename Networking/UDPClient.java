@@ -20,20 +20,20 @@ public class UDPClient
         try 
         {
             Socket = new DatagramSocket();
-            InetAddress IPAddress = InetAddress.getByName("24.117.219.41");
+            InetAddress IPAddress = InetAddress.getByName("localhost");
             byte[] incomingData = new byte[1024];
-            String sentence = "Viehmann";
+            String sentence = "Hello from " + IPAddress.toString() + "!";
             byte[] data = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, 25565);
 
             Socket.send(sendPacket);
-            System.out.println("Message sent from client");
+            System.out.println("Message sent from client\n");
 
             DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
             Socket.receive(incomingPacket);
 
             String response = new String(incomingPacket.getData());
-            System.out.println("Response from server:" + response);
+            System.out.println("Response from server:\n" + response);
 
             Socket.close();
         }
