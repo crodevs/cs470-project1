@@ -39,7 +39,6 @@ public class UDPServer
                 if (elapsed >= 30000)
                 {
                     response(nodes, socket);
-                    System.out.println(nodes);
                     start = System.currentTimeMillis();
                 }
             }
