@@ -1,5 +1,5 @@
-# cs470-project1
-##Project Goal
+# cs470-project1#
+##Project Goal##
 
 The goal is to design and implement a simple application layer protocol over UDP to facilitate High Availability Cluster (HAC). HAC has a set of mechanism to detect failovers, network/node failure etc. in order to re-route the traffic to the available systems. In this project you will not be working on the questions like how to perform consistent failover, or high availability distributed hypervisor. However, your task is to design and implement a protocol to maintain the up-node information throughout the cluster. Your designed protocol should perform the following functions:
 a) To detect node failure periodically (**also the Server failure in case of Client-Server mode)
