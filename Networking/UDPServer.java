@@ -31,7 +31,7 @@ public class UDPServer
             byte[] incomingData = new byte[1024];
 
             // initialize array of clients
-            ArrayList<ClientInfo> clients = new ArrayList<ClientInfo>();
+            ArrayList<Node> clients = new ArrayList<Node>();
 
             while (true) 
             {
@@ -45,7 +45,7 @@ public class UDPServer
                 int port = incomingPacket.getPort();
 
                 // set client information, add client to client list
-                ClientInfo client = new ClientInfo(IPAddress, port);
+                Node client = new Node(IPAddress, port);
 
                 /**
                  * TODO fix adding client that already exists into clients list

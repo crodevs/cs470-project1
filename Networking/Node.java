@@ -9,7 +9,7 @@ import java.util.Date;
  * @version 3-16-2021
  */
 
-public class ClientInfo
+public class Node
 {
     // set time to live to 30000ms or 30s for all objects
     private static final int TTL = 30000;
@@ -19,7 +19,7 @@ public class ClientInfo
     private Date lastSeen;
 
 
-    public ClientInfo(InetAddress IP, int port)
+    public Node(InetAddress IP, int port)
     {
         this.IP = IP;
         this.port = port;
