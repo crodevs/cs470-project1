@@ -1,87 +1,111 @@
 package Networking;
 
 import java.io.IOException;
-import java.net.*;
-import java.util.Date;
-import java.util.LinkedList;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
+
+/**
+ * Server side implementation that listens for packets
+ * @author Carson Rohan, Lucas Steffens
+ * @version 3-20-2021
+ */
 
 public class UDPServer 
 {
     DatagramSocket socket = null;
 
-    public UDPServer() 
-    {
+    public UDPServer() { }
 
-    }
+    /**
+     * This method listens on port 25565 for incoming packets, then
+     * sends an acknowledgement when it receives a packet
+     */
     public void createAndListenSocket() 
     {
         try 
         {
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
-            LinkedList<String> nodes = new LinkedList<String>();
-            long start = System.currentTimeMillis();
-            long elapsed = 0L;
+
+            // initialize array of clients
+            ArrayList<Node> clients = new ArrayList<Node>();
+
+            // the last IP address this server saw
+            String lastIP = "";
 
             while (true) 
             {
+                System.out.println("Waiting for packets...\n");
+
+                // set packet length, receive packet, get data from packet and IP/port
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
                 socket.receive(incomingPacket);
                 String message = new String(incomingPacket.getData());
                 InetAddress IPAddress = incomingPacket.getAddress();
                 int port = incomingPacket.getPort();
-                System.out.println("Received message from client: " + message);
-                System.out.println("Client IP: " + IPAddress.getHostAddress());
-                System.out.println("Client port: " + port);
-                nodes.add(IPAddress.getHostAddress() + ":" + port);
 
-                elapsed = (new Date()).getTime() - start;
-                if (elapsed >= 30000)
+                // set client information, add client to client list
+                Node client = new Node(IPAddress, port);
+
+                if(!(IPAddress.toString().equals(lastIP)))
                 {
-                    response(nodes, socket);
-                    start = System.currentTimeMillis();
+                    clients.add(client);
                 }
+
+                // output for server user
+                System.out.println("Received message from client: \n" + message);
+                System.out.println("Client IP: "+IPAddress.getHostAddress());
+                System.out.println("Client port: "+port);
+
+                String deadClient = "Dead clients: \n";
+                String liveClient = "Live clients: \n";
+
+                // check for dead and alive clients
+                for(int i = 0; i < clients.size(); i++)
+                {
+                    if(clients.get(i).isDead())
+                    {
+                        deadClient += clients.get(i).toString();
+                    } else {
+                        liveClient += clients.get(i).toString();
+                    }
+                }
+
+                // acknowledgment
+                String reply = "Thank you for the message\n\n" + liveClient + "\n" + deadClient;
+                byte[] data = reply.getBytes();
+
+                // create packet for acknowledgement
+                DatagramPacket replyPacket = new DatagramPacket(data, data.length, IPAddress, port);
+
+                // send acknowledgement, close socket
+                socket.send(replyPacket);
+                Thread.sleep(2000);
+                //socket.close();
             }
-        } 
+        }
+
         catch (SocketException e) 
         {
             e.printStackTrace();
-        } 
-        catch (IOException e)
+        }
+
+        catch (IOException i) 
+        {
+            i.printStackTrace();
+        }
+
+        catch (InterruptedException e) 
         {
             e.printStackTrace();
         }
-    }
-
-    void response( LinkedList<String> nodes, DatagramSocket socket)
-    {
-        for (int i = 0; i < nodes.size(); i++)
-        {
-            try
-            {
-                String node = nodes.get(i);
-                String[] splitNode = node.split(":", 2);
-                String dataString = nodes.toString();
-                byte[] data = dataString.getBytes();
-                DatagramPacket replyPacket = new DatagramPacket(data, data.length, InetAddress.getByName(splitNode[0]),
-                        Integer.parseInt(splitNode[1]));
-                socket.send(replyPacket);
-            }
-            catch (UnknownHostException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        nodes.clear();
     }
 
     public static void main(String[] args) 
     {
-
         UDPServer server = new UDPServer();
         server.createAndListenSocket();
     }
