@@ -14,9 +14,9 @@ public class Node
     // set time to live to 30000ms or 30s for all objects
     private static final int TTL = 30000;
 
-    private InetAddress IP;
-    private int port;
-    private Date lastSeen;
+    private final InetAddress IP;
+    private final int port;
+    private final Date lastSeen;
 
 
     public Node(InetAddress IP, int port)
