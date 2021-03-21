@@ -28,6 +28,7 @@ public class UDPServer
     {
         try 
         {
+            // check to see the state of the client/server connections
             Scanner scanner = new Scanner(System.in);
             System.out.println("Has fail-over occurred? (y/n): ");
             String input = scanner.nextLine();
