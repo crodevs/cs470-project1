@@ -33,7 +33,6 @@ public class UDPClient
             {
                 Socket.send(sendPacket);
                 System.out.println("Message sent from client\n");
-
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
                 Socket.receive(incomingPacket);
 

@@ -33,8 +33,9 @@ public class UDPServer
             // initialize array of clients
             ArrayList<Node> clients = new ArrayList<Node>();
 
-            // the last IP address this server saw
-            String lastIP = "";
+            // initialize array of dead and live clients
+            ArrayList<Node> liveClients = new ArrayList<Node>();
+            ArrayList<Node> deadClients = new ArrayList<Node>();
 
             while (true) 
             {
@@ -47,35 +48,58 @@ public class UDPServer
                 InetAddress IPAddress = incomingPacket.getAddress();
                 int port = incomingPacket.getPort();
 
-                // set client information, add client to client list
+                // set client information
                 Node client = new Node(IPAddress, port);
 
-                if(!(IPAddress.toString().equals(lastIP)))
+                // if this is the first client, add it to the list
+                if (clients.size() == 0)
                 {
                     clients.add(client);
                 }
 
+                // look for the current client in the list of clients,
+                // if the current client is found, update its lastSeen.
+                // if the current client is not found, add it
+                boolean found = false;
+                for (int i = 0; i < clients.size(); i++)
+                {
+                    if (clients.get(i) == client)
+                    {
+                        System.out.println("test1");
+                        found = true;
+                    }
+                }
+                if (!found)
+                {
+                    System.out.println("test");
+                    clients.add(client);
+                }
+
+                System.out.println(clients);
                 // output for server user
                 System.out.println("Received message from client: \n" + message);
                 System.out.println("Client IP: "+IPAddress.getHostAddress());
                 System.out.println("Client port: "+port);
 
-                String deadClient = "Dead clients: \n";
-                String liveClient = "Live clients: \n";
+                liveClients.clear();
+                liveClients.trimToSize();
+                deadClients.clear();
+                deadClients.trimToSize();
 
                 // check for dead and alive clients
                 for(int i = 0; i < clients.size(); i++)
                 {
                     if(clients.get(i).isDead())
                     {
-                        deadClient += clients.get(i).toString();
+                        deadClients.add(clients.get(i));
                     } else {
-                        liveClient += clients.get(i).toString();
+                        liveClients.add(clients.get(i));
                     }
                 }
 
                 // acknowledgment
-                String reply = "Thank you for the message\n\n" + liveClient + "\n" + deadClient;
+                String reply = "Thank you for the message\n\n" + "Live clients: \n" + liveClients.toString() + "\n" +
+                        "Dead clients: \n" + deadClients.toString() + "\n";
                 byte[] data = reply.getBytes();
 
                 // create packet for acknowledgement

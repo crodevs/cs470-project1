@@ -16,7 +16,7 @@ public class Node
 
     private final InetAddress IP;
     private final int port;
-    private final Date lastSeen;
+    private Date lastSeen;
 
 
     public Node(InetAddress IP, int port)
@@ -35,6 +35,13 @@ public class Node
     {
         return this.port;
     }
+
+    public Date getLastSeen()
+    {
+        return this.lastSeen;
+    }
+
+    public void setLastSeen() {this.lastSeen = new Date(System.currentTimeMillis());}
 
     /**
      * Determine if the client is dead by checking if it has been greater than
