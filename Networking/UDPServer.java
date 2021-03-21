@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Server side implementation that listens for packets
  * @author Carson Rohan, Lucas Steffens
- * @version 3-16-2021
+ * @version 3-20-2021
  */
 
 public class UDPServer 
@@ -33,6 +33,9 @@ public class UDPServer
             // initialize array of clients
             ArrayList<Node> clients = new ArrayList<Node>();
 
+            // the last IP address this server saw
+            String lastIP = "";
+
             while (true) 
             {
                 System.out.println("Waiting for packets...\n");
@@ -47,10 +50,10 @@ public class UDPServer
                 // set client information, add client to client list
                 Node client = new Node(IPAddress, port);
 
-                /**
-                 * TODO fix adding client that already exists into clients list
-                 */
-                clients.add(client);
+                if(!(IPAddress.toString().equals(lastIP)))
+                {
+                    clients.add(client);
+                }
 
                 // output for server user
                 System.out.println("Received message from client: \n" + message);
@@ -72,7 +75,7 @@ public class UDPServer
                 }
 
                 // acknowledgment
-                String reply = "Thank you for the message\n\n" + liveClient + deadClient;
+                String reply = "Thank you for the message\n\n" + liveClient + "\n" + deadClient;
                 byte[] data = reply.getBytes();
 
                 // create packet for acknowledgement

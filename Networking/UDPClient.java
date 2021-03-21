@@ -6,7 +6,7 @@ import java.net.*;
 /**
  * Client side implementation that sends packets
  * @author Carson Rohan, Lucas Steffens
- * @version 3-16-2021
+ * @version 3-20-2021
  */
 
 public class UDPClient 
