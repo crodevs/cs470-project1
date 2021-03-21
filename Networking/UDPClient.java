@@ -2,7 +2,9 @@ package Networking;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Client side implementation that sends packets
@@ -27,9 +29,8 @@ public class UDPClient
             byte[] data = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, 25565);
 
-            String choice = "ping";
-            Scanner scanner = new Scanner(System.in);
-            while (choice.equals("ping"))
+            Random random = new Random();
+            while (true)
             {
                 Socket.send(sendPacket);
                 System.out.println("Message sent from client\n");
@@ -39,8 +40,9 @@ public class UDPClient
                 String response = new String(incomingPacket.getData());
                 System.out.println("Response from server:\n" + response);
 
-                System.out.println("Waiting for input:");
-                choice = scanner.nextLine();
+                System.out.println("Waiting for next ping...");
+                int randInt = random.nextInt(31);
+                TimeUnit.SECONDS.sleep(randInt);
             }
         }
 
@@ -55,6 +57,11 @@ public class UDPClient
         }
 
         catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
