@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Server side implementation that listens for packets
@@ -113,10 +112,8 @@ public class UDPServer
                 // create packet for acknowledgement
                 DatagramPacket replyPacket = new DatagramPacket(data, data.length, IPAddress, port);
 
-                // send acknowledgement, close socket
+                // send acknowledgement
                 socket.send(replyPacket);
-                Thread.sleep(2000);
-                //socket.close();
             }
         }
 
@@ -128,11 +125,6 @@ public class UDPServer
         catch (IOException i) 
         {
             i.printStackTrace();
-        }
-
-        catch (InterruptedException e) 
-        {
-            e.printStackTrace();
         }
     }
 

@@ -18,12 +18,16 @@ public class UDPClient
 
     public UDPClient() { }
 
-    public void createAndListenSocket() 
+    public void createAndListenSocket()
     {
         try 
         {
+            System.out.println("Please enter the desired server IP: ");
+            Scanner scanner = new Scanner(System.in);
+            String ip = scanner.nextLine();
+
             Socket = new DatagramSocket();
-            InetAddress IPAddress = InetAddress.getByName("localhost");
+            InetAddress IPAddress = InetAddress.getByName(ip);
             byte[] incomingData = new byte[1024];
             String sentence = "Hello from " + IPAddress.toString() + "!";
             byte[] data = sentence.getBytes();
@@ -35,6 +39,7 @@ public class UDPClient
                 Socket.send(sendPacket);
                 System.out.println("Message sent from client\n");
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
+                Socket.setSoTimeout(2000);
                 Socket.receive(incomingPacket);
 
                 String response = new String(incomingPacket.getData());
@@ -46,24 +51,31 @@ public class UDPClient
             }
         }
 
-        catch (UnknownHostException e) 
+        catch (UnknownHostException e)
         {
             e.printStackTrace();
         }
 
-        catch (SocketException e) 
+        catch (SocketException e)
         {
             e.printStackTrace();
         }
 
-        catch (IOException e) 
+        catch (IOException e)
         {
-            e.printStackTrace();
+            System.out.println("Server has failed, creating new server...");
+            Socket.close();
         }
 
         catch (InterruptedException e)
         {
             e.printStackTrace();
+        }
+
+        finally
+        {
+            UDPServer server = new UDPServer();
+            server.createAndListenSocket();
         }
     }
 
