@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Server side implementation that listens for packets
@@ -27,6 +28,20 @@ public class UDPServer
     {
         try 
         {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Has fail-over occurred? (y/n): ");
+            String input = scanner.nextLine();
+            if (input.equals("y"))
+            {
+                System.out.println("Is this the new server? (y/n): ");
+                input = scanner.nextLine();
+                if (input.equals("n"))
+                {
+                    UDPClient client = new UDPClient();
+                    client.createAndListenSocket();
+                }
+            }
+
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
 

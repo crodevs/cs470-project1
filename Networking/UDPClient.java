@@ -39,7 +39,7 @@ public class UDPClient
                 Socket.send(sendPacket);
                 System.out.println("Message sent from client\n");
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
-                Socket.setSoTimeout(2000);
+                Socket.setSoTimeout(5000);
                 Socket.receive(incomingPacket);
 
                 String response = new String(incomingPacket.getData());
