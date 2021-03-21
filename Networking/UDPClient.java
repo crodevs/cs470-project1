@@ -2,6 +2,7 @@ package Networking;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Scanner;
 
 /**
  * Client side implementation that sends packets
@@ -26,16 +27,21 @@ public class UDPClient
             byte[] data = sentence.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, 25565);
 
-            Socket.send(sendPacket);
-            System.out.println("Message sent from client\n");
+            String choice = "ping";
+            Scanner scanner = new Scanner(System.in);
+            while (choice.equals("ping"))
+            {
+                Socket.send(sendPacket);
+                System.out.println("Message sent from client\n");
+                DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
+                Socket.receive(incomingPacket);
 
-            DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
-            Socket.receive(incomingPacket);
+                String response = new String(incomingPacket.getData());
+                System.out.println("Response from server:\n" + response);
 
-            String response = new String(incomingPacket.getData());
-            System.out.println("Response from server:\n" + response);
-
-            Socket.close();
+                System.out.println("Waiting for input:");
+                choice = scanner.nextLine();
+            }
         }
 
         catch (UnknownHostException e) 

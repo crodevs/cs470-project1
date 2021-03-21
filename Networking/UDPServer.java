@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Server side implementation that listens for packets
@@ -33,8 +34,9 @@ public class UDPServer
             // initialize array of clients
             ArrayList<Node> clients = new ArrayList<Node>();
 
-            // the last IP address this server saw
-            String lastIP = "";
+            // initialize array of dead and live clients
+            ArrayList<Node> liveClients = new ArrayList<Node>();
+            ArrayList<Node> deadClients = new ArrayList<Node>();
 
             while (true) 
             {
@@ -47,10 +49,29 @@ public class UDPServer
                 InetAddress IPAddress = incomingPacket.getAddress();
                 int port = incomingPacket.getPort();
 
-                // set client information, add client to client list
+                // set client information
                 Node client = new Node(IPAddress, port);
 
-                if(!(IPAddress.toString().equals(lastIP)))
+                // if this is the first client, add it to the list
+                if (clients.size() == 0)
+                {
+                    clients.add(client);
+                }
+
+                // look for the current client in the list of clients,
+                // if the current client is found, update its lastSeen.
+                // if the current client is not found, add it
+                boolean found = false;
+                for (int i = 0; i < clients.size(); i++)
+                {
+                    if (clients.get(i).getIP().toString().equals(client.getIP().toString()) &&
+                            clients.get(i).getPort() == client.getPort())
+                    {
+                        clients.get(i).setLastSeen();
+                        found = true;
+                    }
+                }
+                if (!found)
                 {
                     clients.add(client);
                 }
@@ -60,22 +81,33 @@ public class UDPServer
                 System.out.println("Client IP: "+IPAddress.getHostAddress());
                 System.out.println("Client port: "+port);
 
-                String deadClient = "Dead clients: \n";
-                String liveClient = "Live clients: \n";
+                liveClients.clear();
+                liveClients.trimToSize();
+                deadClients.clear();
+                deadClients.trimToSize();
 
                 // check for dead and alive clients
                 for(int i = 0; i < clients.size(); i++)
                 {
                     if(clients.get(i).isDead())
                     {
-                        deadClient += clients.get(i).toString();
+                        deadClients.add(clients.get(i));
                     } else {
-                        liveClient += clients.get(i).toString();
+                        liveClients.add(clients.get(i));
                     }
                 }
 
                 // acknowledgment
-                String reply = "Thank you for the message\n\n" + liveClient + "\n" + deadClient;
+                String reply = "Thank you for the message\n\n" + "Live clients: \n";
+                for (int i = 0; i < liveClients.size(); i++)
+                {
+                    reply += liveClients.get(i).toString();
+                }
+                reply += "\nDead clients: \n";
+                for (int i = 0; i < deadClients.size(); i++)
+                {
+                    reply += deadClients.get(i).toString();
+                }
                 byte[] data = reply.getBytes();
 
                 // create packet for acknowledgement
