@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * Server side implementation that listens for packets
@@ -28,6 +28,21 @@ public class UDPServer
     {
         try 
         {
+            // check to see the state of the client/server connections
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Has fail-over occurred? (y/n): ");
+            String input = scanner.nextLine();
+            if (input.equals("y"))
+            {
+                System.out.println("Is this the new server? (y/n): ");
+                input = scanner.nextLine();
+                if (input.equals("n"))
+                {
+                    UDPClient client = new UDPClient();
+                    client.createAndListenSocket();
+                }
+            }
+
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
 
@@ -113,10 +128,8 @@ public class UDPServer
                 // create packet for acknowledgement
                 DatagramPacket replyPacket = new DatagramPacket(data, data.length, IPAddress, port);
 
-                // send acknowledgement, close socket
+                // send acknowledgement
                 socket.send(replyPacket);
-                Thread.sleep(2000);
-                //socket.close();
             }
         }
 
@@ -128,11 +141,6 @@ public class UDPServer
         catch (IOException i) 
         {
             i.printStackTrace();
-        }
-
-        catch (InterruptedException e) 
-        {
-            e.printStackTrace();
         }
     }
 
