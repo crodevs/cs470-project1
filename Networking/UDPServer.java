@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Server side implementation that listens for packets
@@ -63,19 +64,18 @@ public class UDPServer
                 boolean found = false;
                 for (int i = 0; i < clients.size(); i++)
                 {
-                    if (clients.get(i) == client)
+                    if (clients.get(i).getIP().toString().equals(client.getIP().toString()) &&
+                            clients.get(i).getPort() == client.getPort())
                     {
-                        System.out.println("test1");
+                        clients.get(i).setLastSeen();
                         found = true;
                     }
                 }
                 if (!found)
                 {
-                    System.out.println("test");
                     clients.add(client);
                 }
 
-                System.out.println(clients);
                 // output for server user
                 System.out.println("Received message from client: \n" + message);
                 System.out.println("Client IP: "+IPAddress.getHostAddress());
@@ -98,8 +98,16 @@ public class UDPServer
                 }
 
                 // acknowledgment
-                String reply = "Thank you for the message\n\n" + "Live clients: \n" + liveClients.toString() + "\n" +
-                        "Dead clients: \n" + deadClients.toString() + "\n";
+                String reply = "Thank you for the message\n\n" + "Live clients: \n";
+                for (int i = 0; i < liveClients.size(); i++)
+                {
+                    reply += liveClients.get(i).toString();
+                }
+                reply += "\nDead clients: \n";
+                for (int i = 0; i < deadClients.size(); i++)
+                {
+                    reply += deadClients.get(i).toString();
+                }
                 byte[] data = reply.getBytes();
 
                 // create packet for acknowledgement
