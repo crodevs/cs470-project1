@@ -109,7 +109,7 @@ public class UDPPeer
                 if (!found)
                 {
                     nodes.add(node);
-                    FileWriter writer = new FileWriter("Network/config.txt");
+                    FileWriter writer = new FileWriter("Networking/config.txt");
                     writer.write(node.getIP().toString());
                 }
 
