@@ -14,6 +14,7 @@ public class Node
 {
     // set time to live to 30000ms or 30s for all objects
     private static final int TTL = 30000;
+    private static final int defaultPort = 25565;
 
     private final InetAddress IP;
     private final int port;
@@ -37,7 +38,7 @@ public class Node
     public Node(String IP) throws UnknownHostException
     {
         this.IP = InetAddress.getByName(IP);
-        this.port = 25565;
+        this.port = defaultPort;
         this.lastSeen = new Date(System.currentTimeMillis());
     }
 
