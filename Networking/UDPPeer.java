@@ -15,7 +15,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class UDPPeer
 {
-    DatagramSocket socket = null;
+    DatagramSocket outSocket;
+    DatagramSocket inSocket = null;
 
     public UDPPeer() { }
 
@@ -46,7 +47,8 @@ public class UDPPeer
              */
 
             InetAddress thisIP = InetAddress.getLocalHost();
-            socket = new DatagramSocket(25565);
+            outSocket = new DatagramSocket();
+            inSocket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
             String sentence = "Hello from " + thisIP + "!";
             byte[] data = sentence.getBytes();
@@ -67,7 +69,7 @@ public class UDPPeer
                     {
                         DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                                 nodes.get(i).getIP(), 25565);
-                        socket.send(sendPacket);
+                        outSocket.send(sendPacket);
                     }
                 }
 
@@ -75,7 +77,7 @@ public class UDPPeer
 
                 // set packet length, receive packet, get data from packet and IP/port
                 DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
-                socket.receive(incomingPacket);
+                inSocket.receive(incomingPacket);
                 String message = new String(incomingPacket.getData());
                 InetAddress IPAddress = incomingPacket.getAddress();
                 int port = incomingPacket.getPort();
@@ -149,7 +151,7 @@ public class UDPPeer
                         DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
                                 nodes.get(i).getIP(), port);
                         // send acknowledgement
-                        socket.send(replyPacket);
+                        outSocket.send(replyPacket);
                     }
                 }
             }
