@@ -40,14 +40,13 @@ public class UDPPeer
 
             // initialize list of IP addresses from config.txt
             File config = new File("Networking/config.txt");
-            FileWriter writer = new FileWriter("Networking/config.txt");
             Scanner scanner = new Scanner(config);
             String toFile = "";
 
             while (scanner.hasNextLine())
             {
                 String IP = scanner.nextLine();
-                toFile.concat(scanner.nextLine());
+                toFile.concat(IP);
                 nodes.add(new Node(IP));
             }
 
@@ -56,6 +55,7 @@ public class UDPPeer
                 System.out.println(nodes.get(i));
             }
 
+            FileWriter writer = new FileWriter("Networking/config.txt");
             InetAddress thisIP = InetAddress.getLocalHost();
             outSocket = new DatagramSocket();
             inSocket = new DatagramSocket(25565);
