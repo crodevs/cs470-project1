@@ -48,6 +48,10 @@ public class UDPPeer
             InetAddress thisIP = InetAddress.getLocalHost();
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
+            String sentence = "Hello from " + thisIP + "!";
+            byte[] data = sentence.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, thisIP, 25565);
+            Random sendInterval = new Random();
 
             // initialize array of nodes
             ArrayList<Node> nodes = new ArrayList<Node>();
@@ -58,6 +62,8 @@ public class UDPPeer
 
             while (true)
             {
+                socket.send(sendPacket);
+
                 System.out.println("Waiting for packets...\n");
 
                 // set packet length, receive packet, get data from packet and IP/port
@@ -126,23 +132,19 @@ public class UDPPeer
                 {
                     reply += deadNodes.get(i).toString();
                 }
-                byte[] data = reply.getBytes();
+                byte[] replyData = reply.getBytes();
 
                 for(int i = 0; i < nodes.size(); i++)
                 {
                     if(!nodes.get(i).getIP().equals(thisIP))
                     {
                         // create packet for acknowledgement
-                        DatagramPacket replyPacket = new DatagramPacket(data, data.length,
+                        DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
                                 nodes.get(i).getIP(), port);
                         // send acknowledgement
                         socket.send(replyPacket);
                     }
-
                 }
-
-
-
             }
         }
 
