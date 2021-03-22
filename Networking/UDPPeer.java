@@ -65,7 +65,7 @@ public class UDPPeer
                 // broadcast availability to all peers
                 for(int i = 0; i < nodes.size(); i++)
                 {
-                    if(!nodes.get(i).getIP().toString().equals(thisIP.toString()))
+                    if(!nodes.get(i).getIP().equals(thisIP))
                     {
                         DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                                 nodes.get(i).getIP(), 25565);
