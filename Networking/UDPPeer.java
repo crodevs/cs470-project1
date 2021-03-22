@@ -123,6 +123,7 @@ public class UDPPeer
                 // check for dead and alive nodes
                 for(int i = 0; i < nodes.size(); i++)
                 {
+                    System.out.println(nodes.get(i));
                     if(nodes.get(i).isDead())
                     {
                         deadNodes.add(nodes.get(i));
