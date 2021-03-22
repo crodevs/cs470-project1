@@ -58,7 +58,7 @@ public class UDPPeer
             byte[] incomingData = new byte[1024];
             String sentence = "Hello from " + thisIP + "!";
             byte[] data = sentence.getBytes();
-            Random sendInterval = new Random();
+            Random random = new Random();
 
             while (true)
             {
@@ -70,6 +70,9 @@ public class UDPPeer
                         DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                                 nodes.get(i).getIP(), 25565);
                         outSocket.send(sendPacket);
+                        int randInt = random.nextInt(31);
+                        TimeUnit.SECONDS.sleep(randInt);
+
                     }
                 }
 
@@ -166,6 +169,11 @@ public class UDPPeer
         catch (IOException i)
         {
             i.printStackTrace();
+        }
+
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
         }
     }
 
