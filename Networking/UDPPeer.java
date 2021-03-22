@@ -146,7 +146,8 @@ public class UDPPeer
 
                 for(int i = 0; i < nodes.size(); i++)
                 {
-                    if(!nodes.get(i).getIP().equals(thisIP))
+                    //if(!nodes.get(i).getIP().equals(thisIP))
+                    if(true)
                     {
                         // create packet for acknowledgement
                         DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
