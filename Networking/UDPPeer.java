@@ -24,27 +24,33 @@ public class UDPPeer
     {
         try
         {
+            /**
+             * TODO read from file containing list of peer IP's
+             * TODO check input IP against list of peer IP's
+             * TODO add/delete IP's from file as they die and come back alive
+             */
+
+            // initialize array of nodes
+            ArrayList<Node> nodes = new ArrayList<Node>();
+
+            // initialize array of dead and live nodes
+            ArrayList<Node> liveNodes = new ArrayList<Node>();
+            ArrayList<Node> deadNodes = new ArrayList<Node>();
+
             // initialize list of IP addresses from config.txt
-            ArrayList<String> IPList = new ArrayList<String>();
             File config = new File("Networking/config.txt");
             Scanner scanner = new Scanner(config);
 
             while (scanner.hasNextLine())
             {
                 String IP = scanner.nextLine();
-                IPList.add(IP);
+                nodes.add(new Node(IP));
             }
 
-            for(int i = 0; i < IPList.size(); i++)
+            for(int i = 0; i < nodes.size(); i++)
             {
-                System.out.println(IPList.get(i));
+                System.out.println(nodes.get(i));
             }
-
-            /**
-             * TODO read from file containing list of peer IP's
-             * TODO check input IP against list of peer IP's
-             * TODO add/delete IP's from file as they die and come back alive
-             */
 
             InetAddress thisIP = InetAddress.getLocalHost();
             outSocket = new DatagramSocket();
@@ -54,18 +60,12 @@ public class UDPPeer
             byte[] data = sentence.getBytes();
             Random sendInterval = new Random();
 
-            // initialize array of nodes
-            ArrayList<Node> nodes = new ArrayList<Node>();
-
-            // initialize array of dead and live nodes
-            ArrayList<Node> liveNodes = new ArrayList<Node>();
-            ArrayList<Node> deadNodes = new ArrayList<Node>();
-
             while (true)
             {
+                // broadcast availability to all peers
                 for(int i = 0; i < nodes.size(); i++)
                 {
-                    if(!nodes.get(i).getIP().equals(thisIP))
+                    if(!nodes.get(i).getIP().toString().equals(thisIP.toString()))
                     {
                         DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                                 nodes.get(i).getIP(), 25565);
@@ -73,6 +73,7 @@ public class UDPPeer
                     }
                 }
 
+                // listen for packets
                 System.out.println("Waiting for packets...\n");
 
                 // set packet length, receive packet, get data from packet and IP/port

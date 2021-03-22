@@ -1,6 +1,7 @@
 package Networking;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 /**
@@ -23,6 +24,20 @@ public class Node
     {
         this.IP = IP;
         this.port = port;
+        this.lastSeen = new Date(System.currentTimeMillis());
+    }
+
+    public Node(String IP, int port) throws UnknownHostException
+    {
+        this.IP = InetAddress.getByName(IP);
+        this.port = port;
+        this.lastSeen = new Date(System.currentTimeMillis());
+    }
+
+    public Node(String IP) throws UnknownHostException
+    {
+        this.IP = InetAddress.getByName(IP);
+        this.port = 25565;
         this.lastSeen = new Date(System.currentTimeMillis());
     }
 
