@@ -50,7 +50,6 @@ public class UDPPeer
             byte[] incomingData = new byte[1024];
             String sentence = "Hello from " + thisIP + "!";
             byte[] data = sentence.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length, thisIP, 25565);
             Random sendInterval = new Random();
 
             // initialize array of nodes
@@ -62,7 +61,14 @@ public class UDPPeer
 
             while (true)
             {
-                socket.send(sendPacket);
+                for(int i = 0; i < nodes.size(); i++)
+                {
+                    if(!nodes.get(i).getIP().equals(thisIP))
+                    {
+                        DatagramPacket sendPacket = new DatagramPacket(data, data.length, thisIP, 25565);
+                        socket.send(sendPacket);
+                    }
+                }
 
                 System.out.println("Waiting for packets...\n");
 
