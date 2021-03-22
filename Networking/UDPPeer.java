@@ -40,11 +40,14 @@ public class UDPPeer
 
             // initialize list of IP addresses from config.txt
             File config = new File("Networking/config.txt");
+            FileWriter writer = new FileWriter("Networking/config.txt");
             Scanner scanner = new Scanner(config);
+            String toFile = "";
 
             while (scanner.hasNextLine())
             {
                 String IP = scanner.nextLine();
+                toFile.concat(scanner.nextLine());
                 nodes.add(new Node(IP));
             }
 
@@ -109,8 +112,6 @@ public class UDPPeer
                 if (!found)
                 {
                     nodes.add(node);
-                    FileWriter writer = new FileWriter("Networking/config.txt");
-                    writer.write(node.getIP().toString());
                 }
 
                 // output for server user
@@ -139,6 +140,7 @@ public class UDPPeer
                 String reply = "Thank you for the message\n\n" + "Live nodes: \n";
                 for (int i = 0; i < liveNodes.size(); i++)
                 {
+                    toFile.concat(liveNodes.get(i).getIP().toString());
                     reply += liveNodes.get(i).toString();
                 }
                 reply += "\nDead nodes: \n";
@@ -153,6 +155,9 @@ public class UDPPeer
                         IPAddress, port);
                 // send acknowledgement
                 outSocket.send(replyPacket);
+
+                // write to config file
+                writer.write(toFile);
 
                 int randInt = random.nextInt(31);
                 TimeUnit.SECONDS.sleep(randInt);
