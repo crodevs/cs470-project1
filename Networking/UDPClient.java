@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Client side implementation that sends packets
  * @author Carson Rohan, Lucas Steffens
- * @version 3-20-2021
+ * @version 3-21-2021
  */
 
 public class UDPClient 
@@ -20,7 +20,7 @@ public class UDPClient
 
     public void createAndListenSocket()
     {
-        try 
+        try
         {
             System.out.println("Please enter the desired server IP: ");
             Scanner scanner = new Scanner(System.in);
@@ -79,7 +79,7 @@ public class UDPClient
         }
     }
 
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         UDPClient client = new UDPClient();
         client.createAndListenSocket();

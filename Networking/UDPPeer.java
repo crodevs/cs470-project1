@@ -25,8 +25,8 @@ public class UDPPeer
         {
             // initialize list of IP addresses from config.txt
             ArrayList<String> IPList = new ArrayList<String>();
-            File config = new File();
-            Scanner scanner = new Scanner("config.txt");
+            File config = new File("Networking/config.txt");
+            Scanner scanner = new Scanner(config);
 
             while (scanner.hasNextLine())
             {
@@ -45,6 +45,7 @@ public class UDPPeer
              * TODO add/delete IP's from file as they die and come back alive
              */
 
+            InetAddress thisIP = InetAddress.getLocalHost();
             socket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
 
@@ -127,11 +128,21 @@ public class UDPPeer
                 }
                 byte[] data = reply.getBytes();
 
-                // create packet for acknowledgement
-                DatagramPacket replyPacket = new DatagramPacket(data, data.length, IPAddress, port);
+                for(int i = 0; i < nodes.size(); i++)
+                {
+                    if(!nodes.get(i).getIP().equals(thisIP))
+                    {
+                        // create packet for acknowledgement
+                        DatagramPacket replyPacket = new DatagramPacket(data, data.length,
+                                nodes.get(i).getIP(), port);
+                        // send acknowledgement
+                        socket.send(replyPacket);
+                    }
 
-                // send acknowledgement
-                socket.send(replyPacket);
+                }
+
+
+
             }
         }
 
