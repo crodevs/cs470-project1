@@ -65,7 +65,8 @@ public class UDPPeer
                 {
                     if(!nodes.get(i).getIP().equals(thisIP))
                     {
-                        DatagramPacket sendPacket = new DatagramPacket(data, data.length, thisIP, 25565);
+                        DatagramPacket sendPacket = new DatagramPacket(data, data.length,
+                                nodes.get(i).getIP(), 25565);
                         socket.send(sendPacket);
                     }
                 }
