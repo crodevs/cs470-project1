@@ -21,7 +21,7 @@ public class UDPPeer
 
     public UDPPeer() { }
 
-    public void createAndListenSocket()
+    public void createAndListenSocket(String inFile)
     {
         try
         {
@@ -39,7 +39,7 @@ public class UDPPeer
             ArrayList<Node> deadNodes = new ArrayList<Node>();
 
             // initialize list of IP addresses from config.txt
-            File config = new File("Networking/config.txt");
+            File config = new File(inFile);
             Scanner scanner = new Scanner(config);
             String toFile = "";
 
@@ -55,7 +55,7 @@ public class UDPPeer
                 System.out.println(nodes.get(i));
             }
 
-            FileWriter writer = new FileWriter("Networking/config.txt");
+            FileWriter writer = new FileWriter(inFile);
             InetAddress thisIP = InetAddress.getLocalHost();
             outSocket = new DatagramSocket();
             inSocket = new DatagramSocket(25565);
@@ -180,9 +180,9 @@ public class UDPPeer
         }
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
+        String file = "Networking/config.txt";
         UDPPeer peer = new UDPPeer();
-        peer.createAndListenSocket();
+        peer.createAndListenSocket(file);
     }
 }
