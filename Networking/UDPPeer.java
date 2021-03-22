@@ -25,12 +25,6 @@ public class UDPPeer
     {
         try
         {
-            /**
-             * TODO read from file containing list of peer IP's
-             * TODO check input IP against list of peer IP's
-             * TODO add/delete IP's from file as they die and come back alive
-             */
-
             // initialize array of nodes
             ArrayList<Node> nodes = new ArrayList<Node>();
 
@@ -50,17 +44,12 @@ public class UDPPeer
                 nodes.add(new Node(IP));
             }
 
-            for(int i = 0; i < nodes.size(); i++)
-            {
-                System.out.println(nodes.get(i));
-            }
-
             FileWriter writer = new FileWriter(inFile);
             InetAddress thisIP = InetAddress.getLocalHost();
             outSocket = new DatagramSocket();
             inSocket = new DatagramSocket(25565);
             byte[] incomingData = new byte[1024];
-            String sentence = "Hello from " + thisIP + "!";
+            String sentence = "Hello from " + thisIP.getHostAddress() + "!";
             byte[] data = sentence.getBytes();
             Random random = new Random();
 
@@ -114,7 +103,7 @@ public class UDPPeer
                     nodes.add(node);
                 }
 
-                // output for server user
+                // output for user
                 System.out.println("Received message from node: \n" + message);
                 System.out.println("node IP: "+IPAddress.getHostAddress());
                 System.out.println("node port: "+port);
@@ -127,7 +116,6 @@ public class UDPPeer
                 // check for dead and alive nodes
                 for(int i = 0; i < nodes.size(); i++)
                 {
-                    System.out.println(nodes.get(i));
                     if(nodes.get(i).isDead())
                     {
                         deadNodes.add(nodes.get(i));
@@ -152,7 +140,7 @@ public class UDPPeer
 
                 // create packet for acknowledgement
                 DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
-                        IPAddress, port);
+                        IPAddress, 25565);
                 // send acknowledgement
                 outSocket.send(replyPacket);
 
