@@ -2,6 +2,7 @@ package Networking;
 
 import java.io.IOException;
 import java.io.File;
+import java.io.FileWriter;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -108,6 +109,8 @@ public class UDPPeer
                 if (!found)
                 {
                     nodes.add(node);
+                    FileWriter writer = new FileWriter("Network/config.txt");
+                    writer.write(node.getIP().toString());
                 }
 
                 // output for server user
