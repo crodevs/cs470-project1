@@ -70,9 +70,6 @@ public class UDPPeer
                         DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                                 nodes.get(i).getIP(), 25565);
                         outSocket.send(sendPacket);
-                        int randInt = random.nextInt(31);
-                        TimeUnit.SECONDS.sleep(randInt);
-
                     }
                 }
 
@@ -158,6 +155,8 @@ public class UDPPeer
                         outSocket.send(replyPacket);
                     }
                 }
+                int randInt = random.nextInt(31);
+                TimeUnit.SECONDS.sleep(randInt);
             }
         }
 
