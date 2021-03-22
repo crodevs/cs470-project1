@@ -144,18 +144,12 @@ public class UDPPeer
                 }
                 byte[] replyData = reply.getBytes();
 
-                for(int i = 0; i < nodes.size(); i++)
-                {
-                    //if(!nodes.get(i).getIP().equals(thisIP))
-                    if(true)
-                    {
-                        // create packet for acknowledgement
-                        DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
-                                nodes.get(i).getIP(), nodes.get(i).getPort());
-                        // send acknowledgement
-                        outSocket.send(replyPacket);
-                    }
-                }
+                // create packet for acknowledgement
+                DatagramPacket replyPacket = new DatagramPacket(replyData, replyData.length,
+                        IPAddress, port);
+                // send acknowledgement
+                outSocket.send(replyPacket);
+
                 int randInt = random.nextInt(31);
                 TimeUnit.SECONDS.sleep(randInt);
             }
